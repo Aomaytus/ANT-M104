@@ -31,7 +31,7 @@ void get_Amp() {
   if (ReadcurrentMillis - AempMillis >= AempReadingInterval) {
     AempMillis = ReadcurrentMillis;
     for (int i = 0; i < 5; i++) {
-      Read_Amp = +analogRead(A7);
+      Read_Amp = +analogRead(A2);
     }
     Read_Amp / 5;
     ApmeCheck(Read_Amp);

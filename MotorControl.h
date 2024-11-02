@@ -19,7 +19,7 @@ void Stop_FreeRun() {
   digitalWrite(C, LOW);
   digitalWrite(D, LOW);
 }
-void R(float i) {
+void R(int i) {
   digitalWrite(D, HIGH);
   analogWrite(A, i);  // main
 }
@@ -27,7 +27,7 @@ void RS() {
   digitalWrite(A, LOW);
   digitalWrite(D, LOW);
 }
-void L(float i) {
+void L(int i) {
   digitalWrite(C, HIGH);
   analogWrite(B, i);  // main
 }

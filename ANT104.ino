@@ -1,6 +1,6 @@
 byte A_read = A0;  //PWM input
 byte B_read = A1;  //PWM input
-// 2024
+
 const int A = 3,  //PWM
           B = 5,          //pwm
           C = 4,          //Digital
@@ -23,16 +23,13 @@ unsigned long pwmReadingInterval = 20;
 
 unsigned long pwmReadingDuration = 10000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
 
-
-
-
 const float Temp_max = 80.0;  //set max
 const float pwm_defalue = 254;
 const int Auto_Delay = 500;
 float Temp_sensor = 50.0;
 
-float dutyCycleA = 0.0;
-float dutyCycleB = 0.0;
+//float dutyCycleA = 0.0;
+//float dutyCycleB = 0.0;
 
 float Aver_Stop = 160;
 float Av1 = 0.5, Av2 = 0.5;
@@ -78,6 +75,6 @@ void setup() {
 void loop() {
   get_Amp();
   GetTemp();
-  //  Serial.print(" Amp = :" + String(Read_Amp) + " Tem = " + String(Temp_sensor) + " Aver_Stop " + String(Aver_Stop)  );
+    Serial.print(" Amp = :" + String(Read_Amp) + " Tem = " + String(Temp_sensor) + " Aver_Stop " + String(Aver_Stop)  );
   Serial.println("");
 }
