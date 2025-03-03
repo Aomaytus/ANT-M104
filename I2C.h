@@ -39,24 +39,22 @@ void receiveEvent(int howMany) {
     Serial.println(error.c_str());
     return;
   }
-  String savedCode = readCodeFromEEPROM();
-  if (doc.containsKey(savedCode + "M1")) {
-    int pwm = doc[savedCode + "M1"];
+  String MACAddress_code = readCodeFromEEPROM();
+  if (doc.containsKey(MACAddress_code + "M1")) {
+    int pwm = doc[MACAddress_code + "M1"];
     if (pwm > 1) {
-     MotorPwm(pwm, 0);
+      MotorPwm(pwm, 0);
     }
     // Serial.println("M1: " + String(pwm));
   }
-  if (doc.containsKey(savedCode + "M2")) {
-    int pwm = doc[savedCode + "M2"];
+  if (doc.containsKey(MACAddress_code + "M2")) {
+    int pwm = doc[MACAddress_code + "M2"];
     if (pwm > 1) {
       MotorPwm(0, pwm);
     }
-
     // Serial.println("M2: " + String(pwm));
   }
 }
-
 void requestEvent() {
   StaticJsonDocument<200> doc;
   if (receivedCommand.indexOf("TEMP") != -1) {
@@ -97,12 +95,15 @@ void I2C_Set() {
   Wire.begin(I2C_SLAVE_ADDR);
   Wire.onReceive(receiveEvent);
   Wire.onRequest(requestEvent);
-  int chang = digitalRead(A1);
-  if (chang == 1) {
+   bool sw1 = digitalRead(SW_tast1);
+   bool sw2 = digitalRead(SW_tast2);
+  if (sw1 == 1 && sw2 == 1) {
     randomSeed(analogRead(A7));
     String macAddress = generateMACAddress();
     Serial.print("Generated MAC Address: ");
     Serial.println(macAddress);
     saveCodeToEEPROM(macAddress);
   }
+  String savedCode = readCodeFromEEPROM();
+  Serial.println("      MAC Address: " + String(savedCode));
 }

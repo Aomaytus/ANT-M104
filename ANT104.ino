@@ -1,44 +1,46 @@
+// #include <stdint.h>
 byte A_read = A0;  //PWM input
 byte B_read = A1;  //PWM input
-
+// byte analogPin = A7;  // กำหนดหมายเลขขา Analog ที่เชื่อมต่อกับเซนเซอร์
 const int A = 3,  //PWM
-          B = 5,          //pwm
-          C = 4,          //Digital
-          D = 2,          //Digital
-          Fan = 13,       //Digital
-          ERROR_LED = 12;     //digital
-
-int SW_tast1 = 6;
-int SW_tast2 = 10;
+  B = 5,          //pwm
+  C = 4,          //Digital
+  D = 2,          //Digital
+  SW_modeIO = 9,
+          SW_modeRead = 11,
+          SW_tast1 = 6,
+          SW_tast2 = 10,
+          Fan = 13,
+          ERROR_LED = 12;
 int I2Cmode = 0;
 
 unsigned long AempMillis = 0;
-unsigned long AempReadingInterval = 10;
+unsigned long AempReadingInterval = 45;
 
 unsigned long previousMillisTemp = 0;
-const long intervalTemp = 1200;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
+const long intervalTemp = 1500;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
 
 unsigned long previousMillis = 0;
-unsigned long pwmReadingInterval = 20;
+unsigned long pwmReadingInterval = 100;
+unsigned long pwmReadingDuration = 32000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
+const int min_pwm = 999;                   //999    1150
+const int max_pwm = 1950;                  //1950   1650
 
-unsigned long pwmReadingDuration = 10000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
-
-const float Temp_max = 80.0;  //set max
+const float Temp_max = 100.0;  //set max
 const float pwm_defalue = 254;
-const int Auto_Delay = 500;
+const int Auto_Delay = 10;
 float Temp_sensor = 50.0;
-
-//float dutyCycleA = 0.0;
-//float dutyCycleB = 0.0;
-
-float Aver_Stop = 160;
+int Max_Amp = 300;  //600  150
+int16_t Aver_Stop = 2;
+float Stop_Low = 1;
 float Av1 = 0.5, Av2 = 0.5;
+const int Max_Amp_value = 620;  //640
+const int Min_Amp_value = 510;  //510 ปรับค่า Over lode แบบอัตโนมัติ ตัดกระแสตามระบบสัญญาณ input
+int16_t max_pwm_ir = 254;
 
-unsigned int max_pwm_ir = 254;
-const int Max_Amp = 130;
-int sw = 0;
+// int sw = 0;
 int Read_Amp = 0;
-int ERROR_Ampe = 0;
+int16_t ERROR_Ampe = 0;
 #include "Temp.h";
 #include "Sw.h";
 #include <Wire.h>
@@ -54,27 +56,30 @@ void setup() {
   Serial.begin(9600);
   pinMode(A_read, INPUT);
   pinMode(B_read, INPUT);
-  pinMode(9, INPUT_PULLUP);
-  pinMode(SW_tast1, INPUT);
-  pinMode(SW_tast2, INPUT);
+  // pinMode(analogPin,INPUT_PULLUP);
+  pinMode(SW_modeIO, INPUT_PULLUP);
+  pinMode(SW_modeRead, INPUT_PULLUP);
+  // pinMode(SW_tast1, INPUT);
+  // pinMode(SW_tast2, INPUT);
   pinMode(A, OUTPUT);
   pinMode(B, OUTPUT);
   pinMode(C, OUTPUT);
   pinMode(D, OUTPUT);
   pinMode(Fan, OUTPUT);
   pinMode(ERROR_LED, OUTPUT);
-  I2C_Set();
   digitalWrite(A, LOW);
   digitalWrite(D, LOW);
   digitalWrite(B, LOW);
   digitalWrite(C, LOW);
   digitalWrite(Fan, LOW);
+
   digitalWrite(ERROR_LED, LOW);
-  Serial.println("restart");
+  Serial.println(" START ");
+  I2C_Set();
 }
 void loop() {
   get_Amp();
   GetTemp();
-    Serial.print(" Amp = :" + String(Read_Amp) + " Tem = " + String(Temp_sensor) + " Aver_Stop " + String(Aver_Stop)  );
-  Serial.println("");
+  // Serial.println("Amp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
+  // Serial.println("");
 }

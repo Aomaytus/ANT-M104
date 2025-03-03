@@ -1,18 +1,32 @@
 
-void Stop_ABS() {
-  for (int i = 0; i < 20; i++) {
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    delay(i + 5);
-    digitalWrite(C, HIGH);
-    digitalWrite(D, HIGH);
-    delay(i + 5);
+void Stop_ABS(bool is) {
+  static bool hasRun = false;
+  if (is && !hasRun) {
+    for (int step = 0; step < 10; step++) {
+      digitalWrite(A, LOW);
+      digitalWrite(B, LOW);
+      digitalWrite(C, LOW);
+      digitalWrite(D, LOW);
+      delay(step + 2);
+      digitalWrite(C, HIGH);
+      digitalWrite(D, HIGH);
+      delay(step + 2);
+      if (Read_Amp <= Max_Amp) {
+        digitalWrite(A, LOW);
+        digitalWrite(B, LOW);
+        digitalWrite(C, LOW);
+        digitalWrite(D, LOW);
+        Serial.print("Stop_ABS");
+        break;
+      }
+    }
+    hasRun = true;  // ทำครบ
+  } else if (!is) {
+    hasRun = false;  // รีเซ็ตค่าเมื่อ is == false
   }
-  digitalWrite(C, LOW);
-  digitalWrite(D, LOW);
+  // Serial.print("hasRun " + String(hasRun));
 }
+
 void Stop_FreeRun() {
   digitalWrite(A, LOW);
   digitalWrite(B, LOW);
@@ -35,23 +49,19 @@ void LS() {
   digitalWrite(B, LOW);  // main
   digitalWrite(C, LOW);
 }
-
 void MotorPwm(int A, int B) {
-  if (A >= 1 && B >= 1) {
-    Stop_ABS();
-    Stop_FreeRun();
-
-  } else if (A >= 1 && B <= 0) {
-
-
+  if (A >= 1 && B <= 0) {
     LS();
     R(A);
+    Stop_ABS(false);  // รีเซ็ตสถานะ
   } else if (B >= 1 && A <= 0) {
     RS();
-
     L(B);
+    Stop_ABS(false);  // รีเซ็ตสถานะ
   } else {
     // Serial.print("Stop");
+    Stop_ABS(true);  // จะทำงานเพียงครั้งเดียว
     Stop_FreeRun();
   }
+  // Serial.print(" A : " + String(A) + " B : " + String(B) + " ");
 }

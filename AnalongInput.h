@@ -1,18 +1,20 @@
-
+// int16_t sw_stop = 0;
 void ReadAnalongModeC() {
-  int A = analogRead(A1);
-  //  if (AnalogA > 900) { AnalogA = 900; }
-  int B = analogRead(A0);
-  //   if (AnalogNC > 900) { AnalogNC = 900; }
-  //  int A = map(AnalogA, 10, 900, 0, max_pwm_ir);
-  //  int B = map(AnalogNC, 10, 900, 0, max_pwm_ir);
-
-//  Serial.println(" A " + String(A) + " B " + String(B));
-//    AverMode(A, B);
+  int A = analogRead(A_read);
+  A = map(A, 30, 1000, 1, pwm_defalue);
+  if (A >= pwm_defalue) { A = pwm_defalue; }
+  if (A < 0) { A = 0; }
+  bool B = digitalRead(B_read);
+  if (B == 0) {
+    AverMode(A, 0);
+  } else if (B == 1) {
+    AverMode(0, A);
+  }
+  // Serial.println(" A " + String(A) + " B " + String(B));
 }
 void ReadAnalongModeD() {
-  int AnalogA = analogRead(A1);
-  int AnalogNC = digitalRead(A0);
-  AnalogA = map(AnalogA, 0, 1023, 0, 255);
-  AverMode(AnalogA, AnalogNC);
+  int A = analogRead(A_read);
+  bool B = digitalRead(B_read);
+  // Serial.println(" A " + String(A) + " B " + String(B));
+  // AverMode(AnalogA, AnalogNC);
 }

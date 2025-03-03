@@ -1,45 +1,34 @@
-const int analogPin = A7;               // กำหนดหมายเลขขา Analog ที่เชื่อมต่อกับเซนเซอร์
-const float referenceVoltage = 4.9;     // แรงดันอ้างอิง (Volt)
-const float seriesResistance = 570.0;  // ค่าความต้านทานของตัวต้านทาน (Ohm)
-const float NTCResistance = 47000.0;     // ค่าความต้านทานของ NTC ที่อุณหภูมิ 25°C (Ohm)
-const float betaCoefficient = 5000.0;   // ค่าเบต้าของ NTC
-
-int tenp_count = 0;
-int rawValueSum = 0;  // เก็บผลรวมค่า rawValue
-
+const int NTC_PIN = A7;                    // ขาที่เชื่อมต่อ NTC
+const float SERIES_RESISTOR = 6800.0;     // ตัวต้านทาน Pull-up 10k โอห์ม
+const float NOMINAL_RESISTANCE = 10000.0;  // ความต้านทานของ NTC ที่ 25°C
+const float NOMINAL_TEMPERATURE = 28;      // อุณหภูมิที่ 25°C
+const float B_COEFFICIENT = 3950.0;        // ค่าคงที่ B ของ NTC
+const float ADC_MAX = 1023.0;              // ค่า ADC สูงสุด
+const float VCC = 5;                     // แรงดันไฟฟ้า 5V
 void GetTemp() {
   unsigned long ReadcurrentMillis = millis();
   // เรียกใช้ฟังก์ชัน GetTemp ทุกๆ intervalTemp มิลลิวินาที
   if (ReadcurrentMillis - previousMillisTemp >= intervalTemp) {
     previousMillisTemp = ReadcurrentMillis;
-    if (tenp_count < 10) {
-      rawValueSum += analogRead(analogPin);  // สะสมค่า rawValue
-      tenp_count++;
-    } else {
-      float rawValueAvg = rawValueSum / 10.0;  // เฉลี่ยค่า rawValue
-      float voltage = (rawValueAvg / 1023.0) * referenceVoltage;  // แปลงเป็นแรงดัน (Volt)
-      float NTCResistanceMeasured = (seriesResistance * voltage) / (referenceVoltage - voltage);  // คำนวณค่าความต้านทาน NTC
-
-      // คำนวณอุณหภูมิโดยใช้สมการแบบ Steinhart-Hart
-      float steinhart;
-      steinhart = NTCResistanceMeasured / NTCResistance;  // (R/Ro)
-      steinhart = log(steinhart);  // ln(R/Ro)
-      steinhart /= betaCoefficient;  // 1/B * ln(R/Ro)
-      steinhart += 1.0 / (25 + 273.15);  // + (1/To)
-      steinhart = 1.0 / steinhart;  // Invert
-      steinhart -= 273.15;  // แปลงเป็นองศาเซลเซียส
-      Temp_sensor = steinhart;
-
-      // รีเซ็ตตัวนับและค่า rawValue
-      tenp_count = 0;
-      rawValueSum = 0;
-    }
-
-    // ควบคุมพัดลมตามค่าอุณหภูมิ
-    if (Temp_sensor > 40.1) {
-      digitalWrite(Fan, HIGH);  // เปิดพัดลม
-    } else {
-      digitalWrite(Fan, LOW);  // ปิดพัดลม
-    }
+    int adcValue = analogRead(NTC_PIN);          // อ่านค่า ADC
+    float voltage = (adcValue / ADC_MAX) * VCC;  // คำนวณแรงดันไฟฟ้าที่ขา NTC
+    // คำนวณความต้านทานของ NTC
+    float ntcResistance = (SERIES_RESISTOR * voltage) / (VCC - voltage);
+    // ใช้สมการ Steinhart-Hart เพื่อคำนวณอุณหภูมิ
+    float steinhart;
+    steinhart = ntcResistance / NOMINAL_RESISTANCE;     // R/R0
+    steinhart = log(steinhart);                         // ln(R/R0)
+    steinhart /= B_COEFFICIENT;                         // 1/B * ln(R/R0)
+    steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15);  // + (1/T0)
+    steinhart = 1.0 / steinhart;                        // Invert
+    Temp_sensor = steinhart -= 273.15;
+    // Temp_sensor = analogRead(NTC_PIN);  // Convert to Celsius
+    // Temp_sensor = map(Temp_sensor, 925, 325, 31, 75);
+  }
+  // ควบคุมพัดลมตามค่าอุณหภูมิ
+  if (Temp_sensor > 40.1) {
+    digitalWrite(Fan, HIGH);  // เปิดพัดลม
+  } else {
+    digitalWrite(Fan, LOW);  // ปิดพัดลม
   }
 }
