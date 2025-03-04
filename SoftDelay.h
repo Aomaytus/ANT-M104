@@ -1,5 +1,5 @@
-// ฟังก์ชันอัปเดตค่าโดยใช้ pass by reference
-void updateValue(int avg, int input) {
+int updateValue(int input) {
+  int avg = input;  // ใช้ค่า input เป็นค่าเริ่มต้น
   if (avg < input && avg < Aver_Stop) {
     avg += Stop_Low;
   } else if (input <= 0) {
@@ -7,11 +7,11 @@ void updateValue(int avg, int input) {
   } else {
     avg = input;
   }
+  return avg;  // คืนค่าผลลัพธ์
 }
 
 void AverMode(int A, int B) {
-  updateValue(Av1, A);
-  updateValue(Av2, B);
-  // Serial.print(" A " + String(Av1) + " B " + String(Av2)+" Aver_Stop : "+String(Aver_Stop)+" " );
+  Av1 = updateValue(A);
+  Av2 = updateValue(B);  // แก้ไขให้ถูกต้อง
   MotorPwm(Av1, Av2);
 }

@@ -63,5 +63,5 @@ void MotorPwm(int A, int B) {
     Stop_ABS(true);  // จะทำงานเพียงครั้งเดียว
     Stop_FreeRun();
   }
-  // Serial.print(" A : " + String(A) + " B : " + String(B) + " ");
+  Serial.print(" A : " + String(A) + " B : " + String(B) + " ");
 }

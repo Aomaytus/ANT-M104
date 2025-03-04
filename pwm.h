@@ -43,7 +43,7 @@ void ReadPwmModeB(int mode) {
         AverMode(out_b1, 0);
       } else if (out_a1 < 1 && out_a2 < 1 && out_b1 < 1 && out_b2 > 1) {
         AverMode(0, out_b2);
-      } else  {
+      } else {
         // ไม่มีสัญญาณใด ๆ รับมา ให้หยุดมอเตอร์
         AverMode(0, 0);
       }
@@ -59,12 +59,23 @@ void ReadPwmModeB(int mode) {
         AverMode(0, out_b1);
       } else if (out_a1 < 1 && out_a2 < 1 && out_b1 < 1 && out_b2 > 1) {
         AverMode(out_b2, 0);
-      } else  {
+      } else {
         // ไม่มีสัญญาณใด ๆ รับมา ให้หยุดมอเตอร์
         AverMode(0, 0);
       }
     }
-    // ถ้าต้องการเงื่อนไขเพิ่มเติมสำหรับ mode อื่น (เช่น mode == 1)
-    // สามารถเพิ่มเงื่อนไขที่นี่ได้
+    // ปริ้นทุกค่าในบรรทัดเดียวกัน
+    Serial.print("A1: ");
+    Serial.print(A1);
+    Serial.print(" | A2: ");
+    Serial.print(A2);
+    Serial.print(" | out_a1: ");
+    Serial.print(out_a1);
+    Serial.print(" | out_a2: ");
+    Serial.print(out_a2);
+    Serial.print(" | out_b1: ");
+    Serial.print(out_b1);
+    Serial.print(" | out_b2: ");
+    Serial.println(out_b2);
   }
 }
