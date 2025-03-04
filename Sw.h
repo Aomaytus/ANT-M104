@@ -3,7 +3,7 @@
 #include "SoftDelay.h";
 #include "AnalongInput.h";
 #include "pwm.h";
-const long checkInterval = 50;          // เช็คเงื่อนไขทุก 20ms
+const long checkInterval = 20;          // เช็คเงื่อนไขทุก 20ms
 const long switchReadInterval = 5000;  // อ่านค่าทุก 5 วินาที
 
 unsigned long previousCheckTime = 0;

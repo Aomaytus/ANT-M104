@@ -21,7 +21,7 @@ unsigned long previousMillisTemp = 0;
 const long intervalTemp = 1500;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
 
 unsigned long previousMillis = 0;
-unsigned long pwmReadingInterval = 100;
+unsigned long pwmReadingInterval = 50;
 unsigned long pwmReadingDuration = 32000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
 const int min_pwm = 999;                   //999    1150
 const int max_pwm = 1950;                  //1950   1650

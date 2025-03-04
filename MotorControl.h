@@ -7,10 +7,10 @@ void Stop_ABS(bool is) {
       digitalWrite(B, LOW);
       digitalWrite(C, LOW);
       digitalWrite(D, LOW);
-      delay(step + 2);
+      delay(step + 5);
       digitalWrite(C, HIGH);
       digitalWrite(D, HIGH);
-      delay(step + 2);
+      delay(step + 5);
       if (Read_Amp <= Max_Amp) {
         digitalWrite(A, LOW);
         digitalWrite(B, LOW);
