@@ -21,10 +21,8 @@ unsigned long previousMillisTemp = 0;
 const long intervalTemp = 1500;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
 
 unsigned long previousMillis = 0;
-unsigned long pwmReadingInterval = 50;
-unsigned long pwmReadingDuration = 32000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
-const int min_pwm = 999;                   //999    1150
-const int max_pwm = 1950;                  //1950   1650
+unsigned long pwmReadingInterval = 45;
+unsigned long pwmReadingDuration = 35000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
 
 const float Temp_max = 100.0;  //set max
 const float pwm_defalue = 254;
@@ -80,6 +78,6 @@ void setup() {
 void loop() {
   get_Amp();
   GetTemp();
-  // Serial.println("Amp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
+  Serial.println("Amp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
   // Serial.println("");
 }
