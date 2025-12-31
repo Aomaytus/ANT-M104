@@ -1,4 +1,12 @@
+#include <avr/wdt.h>
+
+// --- Config ---
+// เลือกช่วงเวลา WDT (ควรเลือกให้สั้นที่สุดที่เป็นไปได้ แต่ต้องนานกว่า Loop ปกติ)
+// WDTO_15MS, WDTO_30MS, WDTO_60MS, WDTO_120MS, WDTO_250MS, WDTO_500MS, WDTO_1S, WDTO_2S
+#define WDT_TIMEOUT WDTO_250MS
+
 // #include <stdint.h>
+// M1086060 
 byte A_read = A0;  //PWM input
 byte B_read = A1;  //PWM input
 // byte analogPin = A7;  // กำหนดหมายเลขขา Analog ที่เชื่อมต่อกับเซนเซอร์
@@ -18,17 +26,17 @@ unsigned long AempMillis = 0;
 unsigned long AempReadingInterval = 45;
 
 unsigned long previousMillisTemp = 0;
-const long intervalTemp = 1500;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
+const long intervalTemp = 500;  // กำหนดเวลาในมิลลิวินาที (ตัวอย่าง: 1000ms)
 
 unsigned long previousMillis = 0;
 unsigned long pwmReadingInterval = 45;
 unsigned long pwmReadingDuration = 35000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
 
-const float Temp_max = 100.0;  //set max
+const float Temp_max = 90.0;  //set max
 const float pwm_defalue = 254;
 const int Auto_Delay = 10;
 float Temp_sensor = 50.0;
-int Max_Amp = 300;  //600  150
+int Max_Amp = 250;  //600  150
 int16_t Aver_Stop = 2;
 float Stop_Low = 1;
 float Av1 = 0.5, Av2 = 0.5;
@@ -51,6 +59,8 @@ String lastReceivedData = " ";
 bool newDataReceived = false;
 #include "I2C.h";
 void setup() {
+  MCUSR = 0; 
+  wdt_disable();
   Serial.begin(9600);
   pinMode(A_read, INPUT);
   pinMode(B_read, INPUT);
@@ -73,11 +83,14 @@ void setup() {
 
   digitalWrite(ERROR_LED, LOW);
   Serial.println(" START ");
-  I2C_Set();
+  // I2C_Set();
+  
+  wdt_enable(WDT_TIMEOUT);
 }
 void loop() {
+  wdt_reset();
   get_Amp();
   GetTemp();
-  Serial.println("Amp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
+  Serial.println("ReadAmp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
   // Serial.println("");
 }

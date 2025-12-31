@@ -4,7 +4,7 @@
 #include "AnalongInput.h";
 #include "pwm.h";
 const long checkInterval = 20;          // เช็คเงื่อนไขทุก 20ms
-const long switchReadInterval = 5000;  // อ่านค่าทุก 5 วินาที
+const long switchReadInterval = 2000;  // อ่านค่าทุก 5 วินาที
 
 unsigned long previousCheckTime = 0;
 unsigned long previousSwitchReadTime = 0;
@@ -27,7 +27,6 @@ void SwMote() {
   unsigned long currentTime = millis();
   if (currentTime - previousCheckTime >= checkInterval) {
     previousCheckTime = currentTime;
-
     // อ่านค่าจากสวิตช์ทุก 5 วินาที
     ReadSwitchState();
     pinMode(SW_tast1, OUTPUT);
@@ -38,7 +37,6 @@ void SwMote() {
     pinMode(SW_tast2, INPUT);
     bool test_sw1 = digitalRead(SW_tast1);
     bool test_sw2 = digitalRead(SW_tast2);
-
     // Serial.println("  Array : " + String(switch_state[0]) + String(switch_state[1]) + "  : " + String(test_sw1) + "" + String(test_sw2));
     if (test_sw1 == 0 && test_sw2 == 0) {
       if (switch_state[0] == 0 && switch_state[1] == 0) {
@@ -53,7 +51,6 @@ void SwMote() {
     }
     /////////////////////////////
     else if (test_sw1 == 1 || test_sw2 == 1) {
-
       if (test_sw1 == 1) {
         MotorPwm(pwm_defalue, 0);
       } else if (test_sw2 == 1) {

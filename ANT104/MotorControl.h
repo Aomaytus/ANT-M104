@@ -19,6 +19,9 @@ void Stop_ABS(bool is) {
         Serial.print("Stop_ABS");
         break;
       }
+       digitalWrite(C, LOW);
+      digitalWrite(D, LOW);
+      
     }
     hasRun = true;  // ทำครบ
   } else if (!is) {

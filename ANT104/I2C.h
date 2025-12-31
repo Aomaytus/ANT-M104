@@ -40,19 +40,24 @@ void receiveEvent(int howMany) {
     return;
   }
   String MACAddress_code = readCodeFromEEPROM();
-  if (doc.containsKey(MACAddress_code + "M1")) {
-    int pwm = doc[MACAddress_code + "M1"];
-    if (pwm > 1) {
-      MotorPwm(pwm, 0);
+  if (Read_Amp > Max_Amp || Temp_sensor < Temp_max) {
+    if (doc.containsKey(MACAddress_code + "M1")) {
+      int pwm = doc[MACAddress_code + "M1"];
+      if (pwm > 1) {
+        AverMode(pwm, 0);
+      }
+      // Serial.println("M1: " + String(pwm));
     }
-    // Serial.println("M1: " + String(pwm));
-  }
-  if (doc.containsKey(MACAddress_code + "M2")) {
-    int pwm = doc[MACAddress_code + "M2"];
-    if (pwm > 1) {
-      MotorPwm(0, pwm);
+    if (doc.containsKey(MACAddress_code + "M2")) {
+      int pwm = doc[MACAddress_code + "M2"];
+      if (pwm > 1) {
+        AverMode(0, pwm);
+      }
+      // Serial.println("M2: " + String(pwm));
     }
-    // Serial.println("M2: " + String(pwm));
+  } else {
+    
+    ///
   }
 }
 void requestEvent() {
@@ -95,8 +100,8 @@ void I2C_Set() {
   Wire.begin(I2C_SLAVE_ADDR);
   Wire.onReceive(receiveEvent);
   Wire.onRequest(requestEvent);
-   bool sw1 = digitalRead(SW_tast1);
-   bool sw2 = digitalRead(SW_tast2);
+  bool sw1 = digitalRead(SW_tast1);
+  bool sw2 = digitalRead(SW_tast2);
   if (sw1 == 1 && sw2 == 1) {
     randomSeed(analogRead(A7));
     String macAddress = generateMACAddress();
