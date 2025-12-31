@@ -3,7 +3,7 @@
 // --- Config ---
 // เลือกช่วงเวลา WDT (ควรเลือกให้สั้นที่สุดที่เป็นไปได้ แต่ต้องนานกว่า Loop ปกติ)
 // WDTO_15MS, WDTO_30MS, WDTO_60MS, WDTO_120MS, WDTO_250MS, WDTO_500MS, WDTO_1S, WDTO_2S
-#define WDT_TIMEOUT WDTO_250MS
+#define WDT_TIMEOUT WDTO_4S
 
 // #include <stdint.h>
 // M1086060 
@@ -33,7 +33,7 @@ unsigned long pwmReadingInterval = 45;
 unsigned long pwmReadingDuration = 35000;  // ระยะเวลาการอ่าน 1000 มิลลิวินาที 2500
 
 const float Temp_max = 90.0;  //set max
-const float pwm_defalue = 254;
+ float pwm_defalue = 254;
 const int Auto_Delay = 10;
 float Temp_sensor = 50.0;
 int Max_Amp = 250;  //600  150
@@ -91,6 +91,6 @@ void loop() {
   wdt_reset();
   get_Amp();
   GetTemp();
-  Serial.println("ReadAmp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " Aver_Stop: " + String(Aver_Stop));
+  Serial.println("ReadAmp: " + String(Read_Amp) + " Max Amp: " + String(Max_Amp) + " Tem: " + String(Temp_sensor) + " RISE_SPEED: " + String(RISE_SPEED));
   // Serial.println("");
 }
